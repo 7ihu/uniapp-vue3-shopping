@@ -31,7 +31,17 @@
 		"navigationBarBackgroundColor": "#C00000",
 		"backgroundColor": "#FFFFFF"
 	},
-	"subPackages": [],
+	"subPackages": [
+		{
+			"root": "subpkg",
+			"pages": [
+				{
+					"path": "goods_detail/goods_detail",
+					"style": {}
+				}
+			]
+		}
+	],
 	"tabBar": {
 		"selectedColor": "#C00000",
 		"list": [

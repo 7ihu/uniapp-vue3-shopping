@@ -1,37 +1,62 @@
 <template>
-  <view class="home">home</view>
+  <view class="home">
+    <view class="home-swiper">
+      <!-- 轮播图区域 -->
+      <swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
+        <!-- 循环渲染轮播图的 item 项 -->
+        <swiper-item v-for="(item, i) in swiperList" :key="i">
+          <navigator class="swiper-item"
+            :url="'/subpkg/goods_detail/goods_detail?goods_id=' + item.navigator_url.split('=')[1]" open-type="navigate"
+            hover-class="navigator-hover">
+            <!-- 动态绑定图片的 src 属性 -->
+            <image :src="item.image_src"></image>
+          </navigator>
+        </swiper-item>
+      </swiper>
+    </view>
+
+  </view>
 </template>
 
-<!-- <script>
-import Vue from 'vue';
-export default Vue.extend({
-  components: {},
+<script>
+import { log } from 'console'
+export default {
   data() {
-    return {}
+    return {
+      // 1. 轮播图的数据列表，默认为空数组
+      swiperList: [],
+    }
   },
-  computed: {},
-  methods: {},
-  watch: {},
+  onLoad() {
+    // 2. 在小程序页面刚加载的时候，调用获取轮播图数据的方法
+    this.getSwiperList()
+  },
+  methods: {
+    // 3. 获取轮播图数据的方法
+    async getSwiperList() {
+      // 3.1 发起请求
+      const { data: res } = await uni.$http.get('/api/public/v1/home/swiperdata')
+      console.log(res);
+      // 3.2 请求失败
+      if (res.meta.status !== 200) return uni.$showMsg()
+      // 3.3 请求成功，为 data 中的数据赋值
+      this.swiperList = res.message
+    },
+  },
+}
+</script>
 
-  // 页面周期函数--监听页面加载
-  onLoad() {},
-  // 页面周期函数--监听页面初次渲染完成
-  onReady() {},
-  // 页面周期函数--监听页面显示(not-nvue)
-  onShow() {},
-  // 页面周期函数--监听页面隐藏
-  onHide() {},
-  // 页面周期函数--监听页面卸载
-  onUnload() {},
-  // 页面处理函数--监听用户下拉动作
-  // onPullDownRefresh() { uni.stopPullDownRefresh(); },
-  // 页面处理函数--监听用户上拉触底
-  // onReachBottom() {},
-  // 页面处理函数--监听页面滚动(not-nvue)
-  // onPageScroll(event) {},
-  // 页面处理函数--用户点击右上角分享
-  // onShareAppMessage(options) {},
-}) 
-</script> -->
+<style scoped lang="scss">
+swiper {
+  height: 330rpx;
+  margin: 0 10rpx;
+  border-radius: 20rpx;
 
-<style scoped></style>
+  .swiper-item,
+  image {
+    width: 100%;
+    height: 100%;
+    border-radius: 20rpx;
+  }
+}
+</style>
