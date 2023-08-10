@@ -6,12 +6,12 @@
 export default {
   data() {
     return {
-      query: () => { }
+      query: 1
     };
   },
   onLoad(options) {
-    this.query = options
-    console.log(this.query)
+    // this.query = options
+    console.log(options)
   }
 }
 </script>

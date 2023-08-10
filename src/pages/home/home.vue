@@ -5,9 +5,8 @@
       <swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
         <!-- 循环渲染轮播图的 item 项 -->
         <swiper-item v-for="(item, i) in swiperList" :key="i">
-          <navigator class="swiper-item"
-            :url="'/subpkg/goods_detail/goods_detail?goods_id=' + item.navigator_url.split('=')[1]" open-type="navigate"
-            hover-class="navigator-hover">
+          <navigator class="swiper-item" :url="'/pages/detail/detail?goods_id=' + item.navigator_url.split('=')[1]"
+            open-type="navigate" hover-class="navigator-hover">
             <!-- 动态绑定图片的 src 属性 -->
             <image :src="item.image_src"></image>
           </navigator>
@@ -37,14 +36,9 @@
               <image :src="items.image_src" mode="widthFix" :style="{ width: items.image_width + 'rpx' }"></image>
             </navigator>
           </view>
-
         </view>
-
       </view>
     </view>
-
-
-
   </view>
 </template>
 
@@ -90,28 +84,18 @@ export default {
     // 获取楼层数据
     async getFloorList() {
       const { data: res } = await uni.$http.get('/api/public/v1/home/floordata')
-      console.log(res);
       // 请求失败
       if (res.meta.status !== 200) return uni.$showMsg()
       // 请求成功，为 data 中的数据赋值
       // 通过双层 forEach 循环，处理 URL 地址
       res.message.forEach(floor => {
         floor.product_list.forEach(prod => {
-          prod.url = '/subpkg/goods_detail/goods_detail?' + prod.navigator_url.split('?')[1]
+          prod.url = '/pages/detail/detail?' + prod.navigator_url.split('?')[1]
         })
       })
 
       this.floorList = res.message
     },
-
-
-
-
-
-
-
-
-
 
     // 点击事件
     navClickHandler(item) {
