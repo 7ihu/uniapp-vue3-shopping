@@ -1,5 +1,5 @@
 <template>
-  <view>{{ query.goods_id }}</view>
+  <view>{{ query }}</view>
 </template>
 
 <script>
@@ -11,6 +11,7 @@ export default {
   },
   onLoad(options) {
     this.query = options
+    console.log(this.query)
   }
 }
 </script>
