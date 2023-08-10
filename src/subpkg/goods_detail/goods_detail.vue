@@ -1,16 +1,19 @@
 <template>
-  <view>{{ query }}</view>
+  <view>
+    <view>{{ query?.query }}</view>
+    <view>{{ query?.goods_id }}</view>
+  </view>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      query: 1
+      query: {}
     };
   },
   onLoad(options) {
-    // this.query = options
+    this.query = options
     console.log(options)
   }
 }

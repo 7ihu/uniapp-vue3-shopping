@@ -44,7 +44,9 @@
       "pages": [
         {
           "path": "goods_detail/goods_detail",
-          "style": {}
+          "style": {
+            "navigationBarTitleText": "详情"
+          }
         }
       ]
     }

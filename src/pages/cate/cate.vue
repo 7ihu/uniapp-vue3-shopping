@@ -10,11 +10,11 @@
     <!-- 右侧滑动 -->
     <scroll-view scroll-y class="right" :style="{ height: availableHeight + 'px' }" :scroll-top="distance">
       <view v-for="(item, i) in acteListTwo" :key="i">
-        <text class="right-text">/ {{ item.cat_name }} \</text>
+        <text class="right-text">/ {{ item.cat_name }} /</text>
         <view class="right-item">
           <navigator v-for="(items, index) in item.children" :key="index" class="right-items"
-            :url="'/pages/detail/detail?goods_id=' + items.cat_id">
-            <!-- <image :src="items.cat_icon"></image> -->
+            :url="'/subpkg/goods_detail/goods_detail?goods_id=' + items.cat_id">
+            <!-- <image :src="items?.cat_icon"></image> -->
             <text>{{ items.cat_name }}</text>
           </navigator>
         </view>

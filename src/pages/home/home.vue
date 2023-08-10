@@ -5,8 +5,9 @@
       <swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
         <!-- 循环渲染轮播图的 item 项 -->
         <swiper-item v-for="(item, i) in swiperList" :key="i">
-          <navigator class="swiper-item" :url="'/pages/detail/detail?goods_id=' + item.navigator_url.split('=')[1]"
-            open-type="navigate" hover-class="navigator-hover">
+          <navigator class="swiper-item"
+            :url="'/subpkg/goods_detail/goods_detail?goods_id=' + item.navigator_url.split('=')[1]" open-type="navigate"
+            hover-class="navigator-hover">
             <!-- 动态绑定图片的 src 属性 -->
             <image :src="item.image_src"></image>
           </navigator>
@@ -17,8 +18,7 @@
     <!-- nav 导航栏区域 -->
     <view class="nav">
       <navigator v-for="(item, i) in navList" :key="i" @click="navClickHandler(item)">
-        <image :src="item.image_src" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
-        </image>
+        <image :src="item.image_src"></image>
       </navigator>
     </view>
 
@@ -90,7 +90,7 @@ export default {
       // 通过双层 forEach 循环，处理 URL 地址
       res.message.forEach(floor => {
         floor.product_list.forEach(prod => {
-          prod.url = '/pages/detail/detail?' + prod.navigator_url.split('?')[1]
+          prod.url = '/subpkg/goods_detail/goods_detail?' + prod.navigator_url.split('?')[1]
         })
       })
 
@@ -154,14 +154,12 @@ export default {
       width: 100%;
       height: 400rpx;
       padding: 10rpx 6rpx;
-      // background-color: red;
 
       .details {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
-        // width: 70%;
       }
     }
   }
