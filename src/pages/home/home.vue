@@ -1,4 +1,8 @@
 <template>
+  <view class="search-box">
+    <MySearch></MySearch>
+  </view>
+
   <view class="home">
     <!-- 轮播图区域 -->
     <view class="home-swiper">
@@ -106,9 +110,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.search-box {
+  // 设置定位效果为“吸顶”
+  position: sticky;
+  // 吸顶的“位置”
+  top: 0;
+  // 提高层级，防止被轮播图覆盖
+  z-index: 999;
+}
+
 .home {
   .home-swiper {
-    padding-top: 20rpx;
+    padding-top: 10rpx;
 
     swiper {
       height: 330rpx;

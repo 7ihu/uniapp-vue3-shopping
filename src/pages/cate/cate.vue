@@ -1,4 +1,5 @@
 <template>
+  <MySearch></MySearch>
   <view class="cate">
     <!-- 左侧滑动 -->
     <scroll-view scroll-y class="left" :style="{ height: availableHeight + 'px' }">
@@ -40,7 +41,7 @@ export default {
   },
   onLoad() {
     // 获取页面可用高度
-    this.availableHeight = uni.getSystemInfoSync().windowHeight
+    this.availableHeight = uni.getSystemInfoSync().windowHeight - 60
     this.getCateList();
   },
   methods: {
@@ -54,19 +55,11 @@ export default {
       this.acteListTwo = res.message[0].children
     },
 
-
-
     idclick(i) {
       this.newId = i
       this.acteListTwo = this.cateList[i].children
       this.distance = this.distance ? 0 : 1
-    },
-    // Jump(items) {
-    //   console.log(items.cat_id);
-    //   uni.navigateTo({
-    //     url: '/subpkg/goods_detail/goods_detail?goods_id=' + items.cat_id
-    //   })
-    // }
+    }
   }
 }
 </script>
