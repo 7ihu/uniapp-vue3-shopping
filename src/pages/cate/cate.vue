@@ -14,7 +14,7 @@
         <text class="right-text">/ {{ item.cat_name }} /</text>
         <view class="right-item">
           <navigator v-for="(items, index) in item.children" :key="index" class="right-items"
-            :url="'/subpkg/goods_detail/goods_detail?goods_id=' + items.cat_id">
+            :url="'/subpkg/goods_list/goods_list?goods_id=' + items.cat_id">
             <!-- <image :src="items?.cat_icon"></image> -->
             <text>{{ items.cat_name }}</text>
           </navigator>

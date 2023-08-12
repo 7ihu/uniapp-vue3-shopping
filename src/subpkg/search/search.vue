@@ -14,10 +14,10 @@
     <view class="history" v-else>
       <view class="setting">
         <text>搜索历史</text>
-        <icon type="search" size="23" @click="delHistory" />
+        <icon type="clear" size="23" @click="delHistory" />
       </view>
       <view class="record">
-        <text v-for="(item, i) in searchHistory" :key="i">{{ item }}</text>
+        <text v-for="(item, i) in searchHistory" :key="i" @click="addText(item)">{{ item }}</text>
       </view>
     </view>
 
@@ -74,6 +74,10 @@ export default {
       this.searchHistory = []
       // 清空本地存储中记录的搜索历史
       uni.setStorageSync('history', '[]')
+    },
+    addText(item) {
+      this.value = item
+      this.getSearch()
     },
 
 

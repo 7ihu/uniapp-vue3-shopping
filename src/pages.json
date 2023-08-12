@@ -54,6 +54,14 @@
             "navigationBarTitleText": "搜索",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "goods_list/goods_list",
+          "style": {
+            "navigationBarTitleText": "商品列表",
+            "enablePullDownRefresh": true,
+            "onReachBottomDistance": 150
+          }
         }
       ]
     }
