@@ -1,5 +1,6 @@
 import { createSSRApp } from 'vue'
 import App from './App.vue'
+import cartStore from './store/cartStore'
 
 import { $http } from '@escook/request-miniprogram'
 
@@ -27,6 +28,7 @@ uni.$showMsg = function (title = '数据加载失败！', duration = 1500, icon 
 
 export function createApp() {
   const app = createSSRApp(App)
+  app.use(cartStore)
   return {
     app,
   }

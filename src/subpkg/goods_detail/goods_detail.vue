@@ -22,27 +22,30 @@
         <view class="goods-name">{{ goodsDetails.goods_name }}</view>
         <!-- 收藏 -->
         <view class="favi" @click="flag = !flag">
-          <icon type="info" size="18" color="rgb(16, 174, 255)" v-if="flag"></icon>
-          <icon type="success" size="18" v-else></icon>
-          <text :style="flag ? '' : 'color:red'">收藏</text>
+          <image src="../../static/my-icons/collection-fill.png" mode="scaleToFill" v-if="flag" />
+          <image src="../../static/my-icons/collection.png" mode="scaleToFill"  v-else />
+          
+          <text :style="flag ? 'color:red;font-weight: 600;':''">收藏</text>
         </view>
       </view>
       <!-- 运费 -->
       <view class="yf">快递：免运费</view>
     </view>
     <!-- 商品详情信息 -->
-    <view class="goods-image">
+    <view class="goods-image" v-if="goodsDetails.goods_introduce">
+      <text>/ 商品详情 /</text>
       <rich-text :nodes="goodsDetails.goods_introduce"></rich-text>
     </view>
     <!-- 商品导航组件 -->
     <view class="goods_nav">
       <view class="shop" @click="shop">
-        <icon type="info" size="21" color="rgb(16, 174, 255)"></icon>
+        <!-- <icon type="info" size="21" color="rgb(16, 174, 255)"></icon> -->
+        <image src="../../static/my-icons/home.png" mode="scaleToFill" />
         <text>店铺</text>
       </view>
-      <view class="cart" @click="cart">
-        <icon type="info" size="21" color="rgb(16, 174, 255)"></icon>
-        <text class="cartInfo">{{ addGoods.count }}</text>
+      <view class="cart" @click="jumpCart">
+        <image src="../../static/my-icons/cart-empty.png" mode="scaleToFill" />
+        <text class="cartInfo" v-if="total">{{ total }}</text>
         <text>购物车</text>
       </view>
       <view class="buy">
@@ -54,10 +57,13 @@
 </template>
 
 <script>
+// 从 vuex 中按需导出 mapState 辅助方法,按需导入 mapMutations 这个辅助方法
+import { mapState, mapMutations, mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
-      flag: true,
+      flag: false,
       goodsDetails: [],
       addGoods: {
         id: '',
@@ -65,10 +71,18 @@ export default {
       }
     };
   },
+  computed: {
+    // 调用 mapState 方法，把 m_cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
+    // ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
+    ...mapState(['cart']),
+    ...mapGetters(['total'])
+  },
   onLoad(options) {
     this.getgoodsDetails(options.goods_id)
   },
   methods: {
+    // 把 m_cart 模块中的 addToCart 方法映射到当前页面使用
+    ...mapMutations(['addToCart']),
     async getgoodsDetails(goods_id) {
       const { data: res } = await uni.$http.get('/api/public/v1/goods/detail', { goods_id })
       if (res.meta.status !== 200) return uni.$showMsg()
@@ -88,33 +102,23 @@ export default {
         urls: this.goodsDetails.pics.map(x => x.pics_big)
       })
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // 点击购物车跳转
-    cart() {
+    jumpCart() {
       uni.switchTab({ url: '/pages/cart/cart' })
     },
     // 点击加入购物车
-    addCart(id) {
-      if (this.addGoods.count >= 100) return;
-      this.addGoods.id = this.goodsDetails.goods_id
-      this.addGoods.count++
+    addCart() {
+      const goods = {
+        goods_id: this.goodsDetails.goods_id,       // 商品的Id
+        goods_name: this.goodsDetails.goods_name,   // 商品的名称
+        goods_price: this.goodsDetails.goods_price, // 商品的价格
+        goods_count: 1,                           // 商品的数量
+        goods_small_logo: this.goodsDetails.goods_small_logo, // 商品的图片
+        goods_state: true                         // 商品的勾选状态
+      }
+
+      // 通过 this 调用映射过来的 addToCart 方法，把商品信息对象存储到购物车中
+      this.addToCart(goods)
     }
   }
 }
@@ -177,13 +181,17 @@ export default {
       // 收藏区域
       .favi {
         width: 220rpx;
-        font-size: 22rpx;
+        font-size: 26rpx;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
         border-left: 1px solid #efefef;
         color: gray;
+        image{
+          width: 70rpx;
+          height: 60rpx;
+        }
       }
     }
 
@@ -196,7 +204,16 @@ export default {
   }
 
   .goods-image {
+    font-size: 30rpx;
+    font-weight: 600;
+    text-align: center;
     padding-bottom: 50px;
+    border-top: 1px solid gray;
+    text{
+      display: block;
+      height: 80rpx;
+      line-height: 80rpx;
+    }
   }
 
   .goods_nav {
@@ -217,8 +234,12 @@ export default {
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
-      font-size: 25rpx;
+      font-size: 26rpx;
       height: 80rpx;
+
+      image {
+        width: 70rpx;
+      }
     }
 
     .cart {
@@ -230,8 +251,9 @@ export default {
         right: 1rpx;
         width: 30rpx;
         height: 30rpx;
-        line-height: 35rpx;
+        line-height: 30rpx;
         text-align: center;
+        font-size: 20rpx;
         color: #fff;
         background-color: red;
         border-radius: 50%;
