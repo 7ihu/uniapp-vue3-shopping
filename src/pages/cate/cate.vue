@@ -15,12 +15,11 @@
         <view class="right-item">
           <navigator v-for="(items, index) in item.children" :key="index" class="right-items"
             :url="'/subpkg/goods_list/goods_list?goods_id=' + items.cat_id">
-            <!-- <image :src="items?.cat_icon"></image> -->
+            <!-- items.cat_icon  -->
+            <image :src="defaultPic"></image>
             <text>{{ items.cat_name }}</text>
           </navigator>
         </view>
-
-
       </view>
     </scroll-view>
   </view>
@@ -30,6 +29,7 @@
 export default {
   data() {
     return {
+      defaultPic: 'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png',
       // 页面可用高度
       availableHeight: 0,
       // 分类数据
@@ -129,7 +129,7 @@ export default {
         image {
           width: 150rpx;
           height: 120rpx;
-          background: lightcyan;
+          // background: lightcyan;
         }
       }
     }

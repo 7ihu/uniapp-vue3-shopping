@@ -23,9 +23,9 @@
         <!-- 收藏 -->
         <view class="favi" @click="flag = !flag">
           <image src="../../static/my-icons/collection-fill.png" mode="scaleToFill" v-if="flag" />
-          <image src="../../static/my-icons/collection.png" mode="scaleToFill"  v-else />
-          
-          <text :style="flag ? 'color:red;font-weight: 600;':''">收藏</text>
+          <image src="../../static/my-icons/collection.png" mode="scaleToFill" v-else />
+
+          <text :style="flag ? 'color:red;font-weight: 600;' : ''">收藏</text>
         </view>
       </view>
       <!-- 运费 -->
@@ -38,10 +38,10 @@
     </view>
     <!-- 商品导航组件 -->
     <view class="goods_nav">
-      <view class="shop" @click="shop">
+      <view class="shop" @click="jumpHome">
         <!-- <icon type="info" size="21" color="rgb(16, 174, 255)"></icon> -->
         <image src="../../static/my-icons/home.png" mode="scaleToFill" />
-        <text>店铺</text>
+        <text>首页</text>
       </view>
       <view class="cart" @click="jumpCart">
         <image src="../../static/my-icons/cart-empty.png" mode="scaleToFill" />
@@ -50,7 +50,7 @@
       </view>
       <view class="buy">
         <button class="addCart public" @click="addCart">加入购物车</button>
-        <button class="buyNow public" @click="buy">立即购买</button>
+        <button class="buyNow public" @click="jumpBuy">立即购买</button>
       </view>
     </view>
   </view>
@@ -65,24 +65,23 @@ export default {
     return {
       flag: false,
       goodsDetails: [],
-      addGoods: {
-        id: '',
-        count: 0
-      }
+      id: ''
     };
   },
   computed: {
-    // 调用 mapState 方法，把 m_cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
+    // 调用 mapState 方法，把  cart 数组映射到当前页面中，作为计算属性来使用
     // ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
-    ...mapState(['cart']),
+    ...mapState(['cart','frequency']),
     ...mapGetters(['total'])
   },
   onLoad(options) {
+    this.id = options.goods_id;
+    this.frequencyId()
     this.getgoodsDetails(options.goods_id)
   },
   methods: {
-    // 把 m_cart 模块中的 addToCart 方法映射到当前页面使用
-    ...mapMutations(['addToCart']),
+    // 把 addToCart 方法映射到当前页面使用
+    ...mapMutations(['addToCart', 'showHideId','frequencyId']),
     async getgoodsDetails(goods_id) {
       const { data: res } = await uni.$http.get('/api/public/v1/goods/detail', { goods_id })
       if (res.meta.status !== 200) return uni.$showMsg()
@@ -90,7 +89,6 @@ export default {
       res.message.goods_introduce = res.message.goods_introduce.replace(/<img /g, '<img style="display:block;" ').replace(/webp/g, 'jpg')
       // 为 data 中的数据赋值
       this.goodsDetails = res.message
-      console.log(res.message);
     },
     // 实现轮播图的预览效果
     preview(i) {
@@ -102,8 +100,15 @@ export default {
         urls: this.goodsDetails.pics.map(x => x.pics_big)
       })
     },
+
+    // 点击跳转
+    jumpHome() {
+      uni.switchTab({ url: '/pages/home/home' })
+    },
     // 点击购物车跳转
     jumpCart() {
+      this.frequencyId()
+      this.showHideId(this.id)
       uni.switchTab({ url: '/pages/cart/cart' })
     },
     // 点击加入购物车
@@ -119,7 +124,9 @@ export default {
 
       // 通过 this 调用映射过来的 addToCart 方法，把商品信息对象存储到购物车中
       this.addToCart(goods)
-    }
+    },
+    // 点击立即购买
+    // jumpBuy() { }
   }
 }
 </script>
@@ -188,7 +195,8 @@ export default {
         align-items: center;
         border-left: 1px solid #efefef;
         color: gray;
-        image{
+
+        image {
           width: 70rpx;
           height: 60rpx;
         }
@@ -209,7 +217,8 @@ export default {
     text-align: center;
     padding-bottom: 50px;
     border-top: 1px solid gray;
-    text{
+
+    text {
       display: block;
       height: 80rpx;
       line-height: 80rpx;
@@ -238,7 +247,7 @@ export default {
       height: 80rpx;
 
       image {
-        width: 70rpx;
+        width: 60rpx;
       }
     }
 
