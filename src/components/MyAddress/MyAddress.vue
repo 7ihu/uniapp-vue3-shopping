@@ -1,9 +1,8 @@
 <template>
-  <view class="myadress">
+  <view class="myadress"  v-if="cart.length !== 0">
     <!-- 选择收货地址的盒子 -->
     <view class="address-choose-box" v-if="JSON.stringify(address) === '{}'">
       <button type="primary" size="mini" class="btnChooseAddress" @click="chooseAddress">{{ aa }}请选择收货地址</button>
-      
     </view>
 
     <!-- 渲染收货信息的盒子 -->
@@ -15,13 +14,13 @@
         </view>
         <view class="row1-right">
           <view class="phone">电话：<text>{{ address.telNumber }}</text></view>
-          <uni-icons type="arrowright" size="16"></uni-icons>
         </view>
       </view>
       <view class="row2">
         <view class="row2-left">收货地址：</view>
         <view class="row2-right">{{ addstr }}</view>
       </view>
+      <view class="more">></view>
     </view>
 
     <!-- 底部的边框线 -->
@@ -39,7 +38,7 @@ export default {
   },
   computed: {
     // 收货详细地址的计算属性
-    ...mapState(['address']),
+    ...mapState(['cart','address']),
     ...mapGetters(['addstr'])
   },
   methods: {
@@ -52,37 +51,6 @@ export default {
       if (res.errMsg === 'chooseAddress:ok') {
         this.updateAddress(res)
       }
-
-      // 用户没有授权
-      if (res && (res.errMsg === 'chooseAddress:fail auth deny' || res.errMsg === 'chooseAddress:fail authorize no response')) {
-        this.reAuth()
-      }
-    },
-    // 调用此方法，重新发起收货地址的授权
-    async reAuth() {
-      // 提示用户对地址进行授权
-      const [err2, confirmResult] = await uni.showModal({
-        content: '检测到您没打开地址权限，是否去设置打开？',
-        confirmText: "确认",
-        cancelText: "取消",
-      })
-
-      // 如果弹框异常，则直接退出
-      if (err2) return
-
-      // 如果用户点击了 “取消” 按钮，则提示用户 “您取消了地址授权！”
-      if (confirmResult.cancel) return uni.$showMsg('您取消了地址授权！')
-
-      // 如果用户点击了 “确认” 按钮，则调用 uni.openSetting() 方法进入授权页面，让用户重新进行授权
-      if (confirmResult.confirm) return uni.openSetting({
-        // 授权结束，需要对授权的结果做进一步判断
-        success: (settingResult) => {
-          // 地址授权的值等于 true，提示用户 “授权成功”
-          if (settingResult.authSetting['scope.address']) return uni.$showMsg('授权成功！请选择地址')
-          // 地址授权的值等于 false，提示用户 “您取消了地址授权”
-          if (!settingResult.authSetting['scope.address']) return uni.$showMsg('您取消了地址授权！')
-        }
-      })
     }
   }
 }
@@ -106,12 +74,13 @@ export default {
 
 // 渲染收货信息的盒子
 .address-info-box {
+  position: relative;
   font-size: 12px;
   height: 90px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 0 5px;
+  justify-content: space-around;
+  padding: 20rpx;
 
   // 第一行
   .row1 {
@@ -123,7 +92,7 @@ export default {
       align-items: center;
 
       .phone {
-        margin-right: 5px;
+        margin-right: 15rpx;
       }
     }
   }
@@ -137,6 +106,15 @@ export default {
     .row2-left {
       white-space: nowrap;
     }
+  }
+
+  .more {
+    position: absolute;
+    top: 5rpx;
+    right: 3rpx;
+    height: 90px;
+    line-height: 90px;
+    font-size: 30rpx;
   }
 }
 </style>

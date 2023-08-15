@@ -13,8 +13,7 @@ export default createStore({
       cart: JSON.parse(uni.getStorageSync('cart') || '[]'),
       todayId: '',
       frequency: 0,
-
-      // 收货地址
+       // 收货地址
       address: JSON.parse(uni.getStorageSync('address') || '{}'),
     }
   },
@@ -45,6 +44,12 @@ export default createStore({
     },
     frequencyId(state) {
       state.frequency++
+    },
+    frequencynum(state) {
+      if (state.frequency) {
+        state.frequency = 0
+        state.todayId = ''
+      }
     },
     // 更新购物车中商品的勾选状态
     updateGoodsState(state, id) {
@@ -92,6 +97,12 @@ export default createStore({
     saveAddressToStorage(state) {
       uni.setStorageSync('address', JSON.stringify(state.address))
     },
+    cancelState(state, newState) {
+      // 循环更新购物车中每件商品的勾选状态
+      state.cart.forEach((item) => (item.goods_state = newState))
+      // 持久化存储到本地
+      this.commit('saveToStorage')
+    },
   },
 
   // 模块的 getters 属性
@@ -107,6 +118,21 @@ export default createStore({
 
       // 拼接 省，市，区，详细地址 的字符串并返回给用户
       return state.address.provinceName + state.address.cityName + state.address.countyName + state.address.detailInfo
+    },
+    // 勾选的商品的总数量
+    checkedCount(state) {
+      // 先使用 filter 方法，从购物车中过滤器已勾选的商品
+      // 再使用 reduce 方法，将已勾选的商品总数量进行累加
+      // reduce() 的返回值就是已勾选的商品的总数量
+      return state.cart.filter((item) => item.goods_state).reduce((total, items) => (total += items.goods_count), 0)
+    },
+    // 选中商品全选
+    selectAll(state) {
+      return state.cart.filter((item) => item.goods_state === false).length > 0
+    },
+    // 选中商品总价
+    sumPrice(state) {
+      return state.cart.filter((item) => item.goods_state).reduce((sum, items) => sum + items.goods_count * items.goods_price, 0)
     },
   },
 })

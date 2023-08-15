@@ -22,10 +22,10 @@
         <view class="goods-name">{{ goodsDetails.goods_name }}</view>
         <!-- 收藏 -->
         <view class="favi" @click="flag = !flag">
-          <image src="../../static/my-icons/collection-fill.png" mode="scaleToFill" v-if="flag" />
-          <image src="../../static/my-icons/collection.png" mode="scaleToFill" v-else />
+          <image src="../../static/icons/collection-fill.png" mode="scaleToFill" v-if="flag" />
+          <image src="../../static/icons/collection.png" mode="scaleToFill" v-else />
 
-          <text :style="flag ? 'color:red;font-weight: 600;' : ''">收藏</text>
+          <text :style="flag ? 'color:#71bbf7;font-weight: 600;' : ''">收藏</text>
         </view>
       </view>
       <!-- 运费 -->
@@ -40,11 +40,11 @@
     <view class="goods_nav">
       <view class="shop" @click="jumpHome">
         <!-- <icon type="info" size="21" color="rgb(16, 174, 255)"></icon> -->
-        <image src="../../static/my-icons/home.png" mode="scaleToFill" />
+        <image src="../../static/icons/home.png" mode="scaleToFill" />
         <text>首页</text>
       </view>
       <view class="cart" @click="jumpCart">
-        <image src="../../static/my-icons/cart-empty.png" mode="scaleToFill" />
+        <image src="../../static/icons/cart.png" mode="scaleToFill" />
         <text class="cartInfo" v-if="total">{{ total }}</text>
         <text>购物车</text>
       </view>
@@ -244,10 +244,11 @@ export default {
       justify-content: space-around;
       align-items: center;
       font-size: 26rpx;
-      height: 80rpx;
+      height: 90rpx;
 
       image {
         width: 60rpx;
+        height: 60rpx;
       }
     }
 

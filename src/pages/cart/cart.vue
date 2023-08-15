@@ -1,17 +1,17 @@
 <template>
-  <MyAddress></MyAddress>
-  <view class="cart">
+  <view class="cart" v-if="cart.length !== 0">
+    <MyAddress></MyAddress>
     <!-- 购物车商品列表的标题区域 -->
     <view class="cart-title">
       <view class="cart-title-image">
         <!-- 左侧的图标 -->
-        <image src="../../static/my-icons/cart-empty.png" mode="scaleToFill" />
+        <image src="../../static/icons/cart.png" mode="scaleToFill" />
         <!-- 描述文本 -->
         <text class="cart-title-text">购物车{{ showHide }}</text>
       </view>
       <view class="btn">
-        <view><button size="mini" @click="delGoods">删除</button></view>
-        <view v-if="true"><button size="mini" @click="returnBack">返回</button></view>
+        <view style="margin-right: 15rpx;"><button size="mini" @click="delGoods">删除</button></view>
+        <view v-if="todayId"><button size="mini" @click="returnBack">返回</button></view>
       </view>
 
     </view>
@@ -41,6 +41,12 @@
         </view>
       </block>
     </view>
+    <MySettle></MySettle>
+  </view>
+  <!-- 空白购物车区域 -->
+  <view class="empty-cart" :style="'height:' + availableHeight + 'px; '" v-else>
+    <!-- <image src="/static/cart-state.png" class="empty-img"></image> -->
+    <text class="tip-text">空空如也~</text>
   </view>
 </template>
 
@@ -49,7 +55,7 @@ import { mapState, mapMutations, mapGetters } from 'vuex'
 export default ({
   data() {
     return {
-
+      availableHeight: 0
     }
   },
   computed: {
@@ -57,11 +63,12 @@ export default ({
     ...mapGetters(['total'])
   },
   onShow() {
+    this.availableHeight = uni.getSystemInfoSync().windowHeight
     // 在页面刚展示的时候，设置数字徽标
     this.setBadge()
   },
   methods: {
-    ...mapMutations(['addToCart', 'frequencyId', 'updateGoodsState', 'updateGoodsCount', 'delGoodsInfo']),
+    ...mapMutations(['addToCart', 'frequencyId', 'updateGoodsState', 'updateGoodsCount', 'delGoodsInfo', 'frequencynum']),
     setBadge() {
       // 调用 uni.setTabBarBadge() 方法，为购物车设置右上角的徽标
       uni.setTabBarBadge({
@@ -72,6 +79,7 @@ export default ({
     returnBack() {
       this.frequencyId()
       if (this.frequency >= 4) {
+        this.frequencynum()
         return uni.switchTab({ url: '/pages/home/home' })
       }
       uni.navigateTo({
@@ -101,6 +109,8 @@ export default ({
 
 <style scoped lang="scss">
 .cart {
+  padding-bottom: 90rpx;
+
   .cart-title {
     height: 60rpx;
     display: flex;
@@ -120,11 +130,16 @@ export default ({
         height: 50rpx;
       }
     }
-    .btn{
+
+    .btn {
       display: flex;
-      justify-content: space-around;
+      justify-content: flex-end;
       align-items: center;
       width: 260rpx;
+
+      view {
+        height: 60rpx;
+      }
     }
 
     .cart-title-text {
@@ -157,12 +172,14 @@ export default ({
       justify-content: space-between;
 
       .goods-name {
+        flex: 1;
         font-size: 13px;
       }
 
       .goods-info-box {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 0 5rpx;
         margin-right: 20rpx;
 
@@ -191,6 +208,24 @@ export default ({
         }
       }
     }
+  }
+}
+
+.empty-cart {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: url(../../static/cart-state.png) no-repeat center center fixed;
+
+  .tip-text {
+    position: absolute;
+    top: 30%;
+    left: 52%;
+    transform: translateX(-50%);
+    font-size: 45rpx;
+    color: #7f8c8d;
   }
 }
 </style>
