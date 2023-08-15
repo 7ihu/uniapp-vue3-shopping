@@ -63,6 +63,13 @@
             "enablePullDownRefresh": true,
             "onReachBottomDistance": 150
           }
+        },
+        {
+          "path": "orderForm/orderForm",
+          "style": {
+            "navigationBarTitleText": "订单详情",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     }
