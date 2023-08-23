@@ -70,6 +70,13 @@
             "navigationBarTitleText": "订单详情",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "collection/collection",
+          "style": {
+            "navigationBarTitleText": "商品收藏",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     }

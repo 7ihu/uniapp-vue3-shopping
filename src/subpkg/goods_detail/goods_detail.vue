@@ -21,7 +21,7 @@
         <!-- 商品名称 -->
         <view class="goods-name">{{ goodsDetails.goods_name }}</view>
         <!-- 收藏 -->
-        <view class="favi" @click="flag = !flag">
+        <view class="favi" @click="jumpFav">
           <image src="../../static/icons/collection-fill.png" mode="scaleToFill" v-if="flag" />
           <image src="../../static/icons/collection.png" mode="scaleToFill" v-else />
 
@@ -71,7 +71,7 @@ export default {
   computed: {
     // 调用 mapState 方法，把  cart 数组映射到当前页面中，作为计算属性来使用
     // ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
-    ...mapState(['cart','frequency']),
+    ...mapState(['cart', 'frequency','favflag']),
     ...mapGetters(['total'])
   },
   onLoad(options) {
@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     // 把 addToCart 方法映射到当前页面使用
-    ...mapMutations(['addToCart', 'showHideId','frequencyId']),
+    ...mapMutations(['addToCart', 'showHideId', 'frequencyId']),
     async getgoodsDetails(goods_id) {
       const { data: res } = await uni.$http.get('/api/public/v1/goods/detail', { goods_id })
       if (res.meta.status !== 200) return uni.$showMsg()
@@ -100,7 +100,9 @@ export default {
         urls: this.goodsDetails.pics.map(x => x.pics_big)
       })
     },
-
+    jumpFav() {
+      this.flag = !this.flag
+    },
     // 点击跳转
     jumpHome() {
       uni.switchTab({ url: '/pages/home/home' })
