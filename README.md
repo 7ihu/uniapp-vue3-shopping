@@ -6,7 +6,7 @@
 
 ### 技术栈
 
-- 前端框架：[uni-app](https://uniapp.dcloud.net.cn/) (Vue3 + TS + Setup)
+- 前端框架：[uni-app](https://uniapp.dcloud.net.cn/) (Vue)
 - 状态管理：[vuex](https://vuex.vuejs.org/zh/)
 - 组件库：[uni-ui](https://uniapp.dcloud.net.cn/component/uniui/uni-ui.html)
 
