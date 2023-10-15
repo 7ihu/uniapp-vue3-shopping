@@ -22,47 +22,35 @@
         <!-- 第一个面板 -->
         <view class="panel">
           <!-- panel 的主体区域 -->
-          <view class="panel-body">
+          <view class="panel-body" @click="jumpCollection">
             <!-- panel 的 item 项 -->
             <view class="panel-item">
-              <text>0</text>
-              <text>收藏的店铺</text>
-            </view>
-            <view class="panel-item">
-              <text>14</text>
+              <text>{{ cart.length }}</text>
               <text>收藏的商品</text>
             </view>
             <view class="panel-item">
-              <text>18</text>
-              <text>关注的商品</text>
-            </view>
-            <view class="panel-item">
-              <text>84</text>
+              <text>{{ cart.length * 2 }}</text>
               <text>足迹</text>
             </view>
           </view>
         </view>
 
         <!-- 第二个面板 -->
-        <view class="panel">
+        <view class="panel" @click="jumpGoods">
           <!-- 面板的标题 -->
           <view class="panel-title">我的订单</view>
           <!-- 面板的主体 -->
           <view class="panel-title-body">
             <!-- 面板主体中的 item 项 -->
-            <view class="panel-item" @click="jumpGoods">
+            <view class="panel-item">
               <image src="/static/icons/icon1.png" class="icon"></image>
-              <text>待付款</text>
+              <text>历史订单</text>
             </view>
-            <view class="panel-item" @click="jumpGoods">
-              <image src="/static/icons/icon2.png" class="icon"></image>
-              <text>待收货</text>
-            </view>
-            <view class="panel-item" @click="jumpGoods">
+            <view class="panel-item">
               <image src="/static/icons/icon3.png" class="icon"></image>
               <text>退款/退货</text>
             </view>
-            <view class="panel-item" @click="jumpGoods">
+            <view class="panel-item">
               <image src="/static/icons/icon4.png" class="icon"></image>
               <text>全部订单</text>
             </view>
@@ -71,12 +59,8 @@
 
         <!-- 第三个面板 -->
         <view class="panel">
-          <view class="panel-list-item">
+          <view class="panel-list-item" @click="chooseAddress">
             <text>收货地址</text>
-            <text>></text>
-          </view>
-          <view class="panel-list-item">
-            <text>联系客服</text>
             <text>></text>
           </view>
           <view class="panel-list-item" @click="outOfLogin">
@@ -98,7 +82,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapState(['userinfo', 'token']),
+    ...mapState(['userinfo', 'token', 'cart']),
 
   },
   methods: {
@@ -154,6 +138,18 @@ export default {
     },
     jumpGoods() {
       uni.navigateTo({ url: '/subpkg/orderForm/orderForm' })
+    },
+    jumpCollection() {
+      uni.navigateTo({ url: '/subpkg/collection/collection' })
+    },
+    async chooseAddress() {
+      // 调用小程序提供的 chooseAddress() 方法,返回值是一个数组：第1项为错误对象；第2项为成功之后的收货地址对象
+      const res = await uni.chooseAddress().catch(err => err)
+      console.log(res);
+      // 用户成功的选择了收货地址
+      if (res.errMsg === 'chooseAddress:ok') {
+        this.updateAddress(res)
+      }
     }
   },
 }
@@ -210,7 +206,7 @@ page,
     background-color: #f4f4f4;
 
     .top-box {
-      height: 400rpx;
+      height: 450rpx;
       background-color: #c00000;
       display: flex;
       flex-direction: column;
@@ -247,7 +243,7 @@ page,
         .panel-body {
           display: flex;
           justify-content: space-around;
-          height: 140rpx;
+          height: 150rpx;
 
           .panel-item {
             display: flex;

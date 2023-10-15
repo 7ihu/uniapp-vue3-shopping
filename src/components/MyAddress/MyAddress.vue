@@ -80,7 +80,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding: 20rpx;
+  padding: 15rpx 30rpx 15rpx 15rpx;
 
   // 第一行
   .row1 {
@@ -111,10 +111,10 @@ export default {
   .more {
     position: absolute;
     top: 5rpx;
-    right: 3rpx;
+    right: 12rpx;
     height: 90px;
     line-height: 90px;
-    font-size: 30rpx;
+    font-size: 35rpx;
   }
 }
 </style>

@@ -126,11 +126,16 @@ export default createStore({
       uni.setStorageSync('token', state.token)
     },
     updatecart(state) {
-      const len = state.cart
-        .filter((items) => items.goods_state)
-        .map((item) => (item.goods_count * item.goods_price) / item.goods_id)
-        .join('')
-      state.cartList[len] = state.cart.filter((item) => item.goods_state)
+      let newKey = ''
+      while (state.cartList.hasOwnProperty(newKey) || newKey === '') {
+        let key =
+          '1' +
+          Math.floor(Math.random() * Math.pow(10, 17))
+            .toString()
+            .padStart(17, '0')
+        newKey = key
+      }
+      state.cartList[newKey] = state.cart.filter((item) => item.goods_state)
       state.cart = state.cart.filter((item) => !item.goods_state)
       // 通过 this.commit() 方法，调用 m_user 模块下的 saveTokenToStorage 方法，将 token 字符串持久化存储到本地
       this.commit('saveToStorageList')
