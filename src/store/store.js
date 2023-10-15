@@ -7,14 +7,16 @@ export default createStore({
   // 模块的 state 数据
   state() {
     return {
-      // 购物车的数组，用来存储购物车中每个商品的信息对象
-      // 每个商品的信息对象，都包含如下 6 个属性：
-      // { goods_id, goods_name, goods_price, goods_count, goods_small_logo, goods_state }
+      // 每个商品的信息对象，都包含如下 6 个属性： { goods_id, goods_name, goods_price, goods_count, goods_small_logo, goods_state }
       cart: JSON.parse(uni.getStorageSync('cart') || '[]'),
+      cartList: JSON.parse(uni.getStorageSync('cartList') || '{}'),
       todayId: '',
       frequency: 0,
-       // 收货地址
+      // 收货地址
       address: JSON.parse(uni.getStorageSync('address') || '{}'),
+      // 用户信息
+      userinfo: JSON.parse(uni.getStorageSync('userinfo') || '{}'),
+      token: uni.getStorageSync('token') || '',
     }
   },
 
@@ -102,6 +104,44 @@ export default createStore({
       state.cart.forEach((item) => (item.goods_state = newState))
       // 持久化存储到本地
       this.commit('saveToStorage')
+    },
+    updateUserInfo(state, userinfo) {
+      state.userinfo = userinfo
+      // 通过 this.commit() 方法，调用 m_user 模块下的 saveUserInfoToStorage 方法，将 userinfo 对象持久化存储到本地
+      this.commit('saveUserInfoToStorage')
+    },
+    // 将 userinfo 持久化存储到本地
+    saveUserInfoToStorage(state) {
+      uni.setStorageSync('userinfo', JSON.stringify(state.userinfo))
+    },
+    // 更新 token 字符串
+    updateToken(state, token) {
+      state.token = token
+      // 通过 this.commit() 方法，调用 m_user 模块下的 saveTokenToStorage 方法，将 token 字符串持久化存储到本地
+      this.commit('saveTokenToStorage')
+    },
+
+    // 将 token 字符串持久化存储到本地
+    saveTokenToStorage(state) {
+      uni.setStorageSync('token', state.token)
+    },
+    updatecart(state) {
+      const len = state.cart
+        .filter((items) => items.goods_state)
+        .map((item) => (item.goods_count * item.goods_price) / item.goods_id)
+        .join('')
+      state.cartList[len] = state.cart.filter((item) => item.goods_state)
+      state.cart = state.cart.filter((item) => !item.goods_state)
+      // 通过 this.commit() 方法，调用 m_user 模块下的 saveTokenToStorage 方法，将 token 字符串持久化存储到本地
+      this.commit('saveToStorageList')
+    },
+    saveToStorageList(state) {
+      uni.setStorageSync('cartList', JSON.stringify(state.cartList))
+    },
+    delcart(state) {
+      state.cart = []
+      this.commit('saveToStorage')
+      return uni.$showMsg('清除完成')
     },
   },
 
